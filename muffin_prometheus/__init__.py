@@ -11,7 +11,7 @@ from asgi_prometheus import (
 )
 
 
-__version__ = "0.0.0"
+__version__ = "1.0.0"
 __project__ = "muffin-prometheus"
 __author__ = "Kirill Klenov <horneds@gmail.com>"
 __license__ = "MIT"
