@@ -5,7 +5,7 @@ import typing as t
 
 from muffin import Request, Response, ResponseText
 from muffin.typing import Receive, Send, ASGIApp
-from muffin.plugin import BasePlugin
+from muffin.plugins import BasePlugin
 from asgi_prometheus import (
     get_metrics, process_path, REQUESTS, REQUESTS_TIME, REQUESTS_IN_PROGRESS, RESPONSES, EXCEPTIONS
 )
