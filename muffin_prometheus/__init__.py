@@ -1,4 +1,4 @@
-"""Support session with Muffin framework."""
+"""Provide prometheus metrics for Muffin framework."""
 
 import time
 import typing as t
