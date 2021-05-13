@@ -76,7 +76,7 @@ You are able to provide the options when you are initiliazing the plugin:
 
 .. code-block:: python
 
-    session.setup(app, metrics_url='/metrics', group_paths=['/views', '/api/v1', '/api/v2'])
+    prometheus.setup(app, metrics_url='/metrics', group_paths=['/views', '/api/v1', '/api/v2'])
 
 
 Or setup it inside ``Muffin.Application`` config using the ``PROMETHEUS_`` prefix:
@@ -95,16 +95,15 @@ Or setup it inside ``Muffin.Application`` config using the ``PROMETHEUS_`` prefi
 Bug tracker
 ===========
 
-If you have any suggestions, bug reports or
-annoyances please report them to the issue tracker
-at https://github.com/klen/muffin-session/issues
+If you have any suggestions, bug reports or annoyances please report them to
+the issue tracker at https://github.com/klen/muffin-prometheus/issues
 
 .. _contributing:
 
 Contributing
 ============
 
-Development of Muffin-Session happens at: https://github.com/klen/muffin-session
+Development of the plugin happens at: https://github.com/klen/muffin-prometheus
 
 
 Contributors
