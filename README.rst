@@ -50,13 +50,13 @@ Initialize and setup the plugin:
 .. code-block:: python
 
     import muffin
-    import muffin_babel
+    import muffin_prometheus
 
     # Create Muffin Application
     app = muffin.Application('example')
 
     # Initialize the plugin
-    # As alternative: babel = muffin_prometheus.Plugin(app, **options)
+    # As alternative: prometheus = muffin_prometheus.Plugin(app, **options)
     prometheus = muffin_prometheus.Plugin()
     prometheus.setup(app, group_paths=['/api'])
 
