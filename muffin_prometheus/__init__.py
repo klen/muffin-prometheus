@@ -1,15 +1,12 @@
 """Provide prometheus metrics for Muffin framework."""
 
 import time
-import typing as t
 
+from asgi_prometheus import (EXCEPTIONS, REQUESTS, REQUESTS_IN_PROGRESS, REQUESTS_TIME, RESPONSES,
+                             get_metrics, process_path)
+from asgi_tools.types import TASGIApp, TASGIReceive, TASGISend
 from muffin import Request, Response, ResponseText
-from muffin.typing import Receive, Send, ASGIApp
 from muffin.plugins import BasePlugin
-from asgi_prometheus import (
-    get_metrics, process_path, REQUESTS, REQUESTS_TIME, REQUESTS_IN_PROGRESS, RESPONSES, EXCEPTIONS
-)
-
 
 __version__ = "1.1.0"
 __project__ = "muffin-prometheus"
@@ -21,13 +18,19 @@ class Plugin(BasePlugin):
 
     """Support prometheus metrics."""
 
-    name = 'prometheus'
-    defaults: t.Dict = {
-        'group_paths': [],
-        'metrics_url': '/dev/prometheus',
+    name = "prometheus"
+    defaults = {
+        "group_paths": [],
+        "metrics_url": "/dev/prometheus",
     }
 
-    async def middleware(self, handler: ASGIApp, request: Request, receive: Receive, send: Send):  # type: ignore  # noqa
+    async def middleware(  # type: ignore
+        self,
+        handler: TASGIApp,
+        request: Request,
+        receive: TASGIReceive,
+        send: TASGISend,
+    ):
         """Collect the metrics."""
         path, method = request.path, request.method
         if path == self.cfg.metrics_url:
@@ -42,14 +45,18 @@ class Plugin(BasePlugin):
             before_time = time.perf_counter()
             res = await handler(request, receive, send)
             after_time = time.perf_counter()
-            REQUESTS_TIME.labels(method=method, path=path).observe(after_time - before_time)
+            REQUESTS_TIME.labels(method=method, path=path).observe(
+                after_time - before_time
+            )
             if isinstance(res, Response):
                 RESPONSES.labels(method=method, path=path, status=res.status_code)
 
             return res
 
         except Exception as exc:
-            EXCEPTIONS.labels(method=method, path=path, exception=type(exc).__name__).inc()
+            EXCEPTIONS.labels(
+                method=method, path=path, exception=type(exc).__name__
+            ).inc()
             raise exc from None
 
         finally:
