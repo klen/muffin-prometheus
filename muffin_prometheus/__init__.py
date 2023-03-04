@@ -1,17 +1,24 @@
 """Provide prometheus metrics for Muffin framework."""
 
-import time
+from __future__ import annotations
 
-from asgi_prometheus import (EXCEPTIONS, REQUESTS, REQUESTS_IN_PROGRESS, REQUESTS_TIME, RESPONSES,
-                             get_metrics, process_path)
-from asgi_tools.types import TASGIApp, TASGIReceive, TASGISend
+import time
+from typing import TYPE_CHECKING
+
+from asgi_prometheus import (
+    EXCEPTIONS,
+    REQUESTS,
+    REQUESTS_IN_PROGRESS,
+    REQUESTS_TIME,
+    RESPONSES,
+    get_metrics,
+    process_path,
+)
 from muffin import Request, Response, ResponseText
 from muffin.plugins import BasePlugin
 
-__version__ = "1.2.0"
-__project__ = "muffin-prometheus"
-__author__ = "Kirill Klenov <horneds@gmail.com>"
-__license__ = "MIT"
+if TYPE_CHECKING:
+    from asgi_tools.types import TASGIApp, TASGIReceive, TASGISend
 
 
 class Plugin(BasePlugin):
@@ -24,7 +31,7 @@ class Plugin(BasePlugin):
         "metrics_url": "/dev/prometheus",
     }
 
-    async def middleware(  # type: ignore
+    async def middleware(  # type: ignore[override]
         self,
         handler: TASGIApp,
         request: Request,
@@ -46,18 +53,19 @@ class Plugin(BasePlugin):
             res = await handler(request, receive, send)
             after_time = time.perf_counter()
             REQUESTS_TIME.labels(method=method, path=path).observe(
-                after_time - before_time
+                after_time - before_time,
             )
             if isinstance(res, Response):
                 RESPONSES.labels(method=method, path=path, status=res.status_code)
 
-            return res
-
         except Exception as exc:
             EXCEPTIONS.labels(
-                method=method, path=path, exception=type(exc).__name__
+                method=method, path=path, exception=type(exc).__name__,
             ).inc()
             raise exc from None
+
+        else:
+            return res
 
         finally:
             REQUESTS_IN_PROGRESS.labels(method=method, path=path).dec()
