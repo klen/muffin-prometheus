@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from asgi_prometheus import (
     EXCEPTIONS,
@@ -26,7 +26,7 @@ class Plugin(BasePlugin):
     """Support prometheus metrics."""
 
     name = "prometheus"
-    defaults = {
+    defaults: ClassVar = {
         "group_paths": [],
         "metrics_url": "/dev/prometheus",
     }
@@ -58,9 +58,11 @@ class Plugin(BasePlugin):
             if isinstance(res, Response):
                 RESPONSES.labels(method=method, path=path, status=res.status_code)
 
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             EXCEPTIONS.labels(
-                method=method, path=path, exception=type(exc).__name__,
+                method=method,
+                path=path,
+                exception=type(exc).__name__,
             ).inc()
             raise exc from None
 
