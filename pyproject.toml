@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "muffin-prometheus"
-version = "1.4.0"
+version = "1.4.1"
 description = "Prometheus metrics exporter for Muffin framework"
 readme = "README.rst"
 license = "MIT"
