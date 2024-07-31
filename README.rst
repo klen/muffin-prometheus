@@ -28,7 +28,7 @@ Muffin-Prometheus
 Requirements
 =============
 
-- python >= 3.7
+- python >= 3.9
 
 .. _installation:
 
@@ -64,12 +64,12 @@ Initialize and setup the plugin:
 Options
 -------
 
-=========================== =========================== =========================== 
+=========================== =========================== ===========================
 Name                        Default value               Desctiption
 --------------------------- --------------------------- ---------------------------
 **metrics_url**             ``"/dev/prometheus"``       HTTP Path to export metrics for Prometheus_
 **group_paths**             ``[]``                      List of path's prefixes to group. A path which starts from the prefix will be grouped
-=========================== =========================== =========================== 
+=========================== =========================== ===========================
 
 
 You are able to provide the options when you are initiliazing the plugin:

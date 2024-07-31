@@ -46,10 +46,10 @@ major:
 #  Development
 # =============
 
-$(VIRTUAL_ENV): pyproject.toml
+$(VIRTUAL_ENV): poetry.lock .pre-commit-config.yaml
 	@[ -d $(VIRTUAL_ENV) ] || python -m venv $(VIRTUAL_ENV)
-	@$(VIRTUAL_ENV)/bin/pip install -e .[tests,dev]
-	@$(VIRTUAL_ENV)/bin/pre-commit install --hook-type pre-push
+	@poetry install --with tests,dev
+	@poetry run pre-commit install
 	@touch $(VIRTUAL_ENV)
 
 .PHONY: test
