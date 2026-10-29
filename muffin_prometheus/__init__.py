@@ -55,7 +55,7 @@ class Plugin(BasePlugin):
                 after_time - before_time,
             )
             if isinstance(res, Response):
-                RESPONSES.labels(method=method, path=path, status=res.status_code)
+                RESPONSES.labels(method=method, path=path, status=res.status_code).inc()
 
         except Exception as exc:
             EXCEPTIONS.labels(

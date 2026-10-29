@@ -1,6 +1,8 @@
 import muffin
 import pytest
 
+RES_200 = 'responses_count_total{method="GET",path="",status="200"}'
+
 
 @pytest.fixture
 def app():
@@ -22,6 +24,27 @@ async def test_base(app, client):
     assert text
     assert "requests_count_total" in text
     assert "requests_time" in text
+
+
+def sample(text: str, prefix: str) -> float:
+    """Read a metric value from the exposition text (0 when the sample is missing)."""
+    for line in text.splitlines():
+        if line.startswith(prefix):
+            return float(line.rsplit(" ", 1)[-1])
+    return 0.0
+
+
+async def test_responses(app, client):
+    from muffin_prometheus import Plugin
+
+    Plugin(app)
+    app.route("/")(lambda request: "OK")
+
+    before = sample(await (await client.get("/metrics")).text(), RES_200)
+    assert (await client.get("/")).status_code == 200
+    after = sample(await (await client.get("/metrics")).text(), RES_200)
+
+    assert after == before + 1
 
 
 async def test_group_path(app, client):
