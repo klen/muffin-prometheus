@@ -22,7 +22,6 @@ if TYPE_CHECKING:
 
 
 class Plugin(BasePlugin):
-
     """Support prometheus metrics."""
 
     name = "prometheus"
@@ -56,9 +55,9 @@ class Plugin(BasePlugin):
                 after_time - before_time,
             )
             if isinstance(res, Response):
-                RESPONSES.labels(method=method, path=path, status=res.status_code)
+                RESPONSES.labels(method=method, path=path, status=res.status_code).inc()
 
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             EXCEPTIONS.labels(
                 method=method,
                 path=path,
