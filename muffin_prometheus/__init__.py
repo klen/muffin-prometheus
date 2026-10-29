@@ -22,7 +22,6 @@ if TYPE_CHECKING:
 
 
 class Plugin(BasePlugin):
-
     """Support prometheus metrics."""
 
     name = "prometheus"
@@ -58,7 +57,7 @@ class Plugin(BasePlugin):
             if isinstance(res, Response):
                 RESPONSES.labels(method=method, path=path, status=res.status_code)
 
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             EXCEPTIONS.labels(
                 method=method,
                 path=path,
