@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar, Mapping
 
 from asgi_prometheus import (
     EXCEPTIONS,
@@ -25,18 +25,18 @@ class Plugin(BasePlugin):
     """Support prometheus metrics."""
 
     name = "prometheus"
-    defaults: ClassVar = {
+    defaults: ClassVar[Mapping[str, Any]] = {
         "group_paths": [],
         "metrics_url": "/dev/prometheus",
     }
 
-    async def middleware(  # type: ignore[override]
+    async def middleware(
         self,
         handler: TASGIApp,
         request: Request,
         receive: TASGIReceive,
         send: TASGISend,
-    ):
+    ) -> Any:
         """Collect the metrics."""
         path, method = request.path, request.method
         if path == self.cfg.metrics_url:
